@@ -7,6 +7,7 @@ from requests import post, get
 # Calls the API to search for an artist and shows the user their top ten songs.
 # Shows the user the number of the artist's albums and asks if they want to see a list. If so, it shows them.
 # Gives the user the option to search for another artist. 
+# Tells the user who has more albums.
 # Author: Divi Newton
 # Email:  dnewton@chapman.edu
 # Date:  3/18/2025
@@ -84,12 +85,28 @@ def get_number_albums(token, artist_id):
     return len(json_answer)
 
 
+# this function determines who out of two artists has more albums
+def more_albums(current_artist_name, last_artist_name, current_num_albums, old_num_albums):
+    if last_artist != "none":
+        print(" ")
+        if current_num_albums > old_num_albums:
+            print(current_artist_name + " has more albums than " + last_artist_name + "!")
+        elif current_num_albums < old_num_albums:
+            print(last_artist_name + " has more albums than " + current_artist_name + "!")
+        else:
+            print(current_artist_name + " and " + last_artist_name + " have the same number of albums!")
+
+
 # the main program starts here
 print(" ")
 print("SPOTIFY ARTIST STATS")
 print(" ")
 print("Welcome to Spotify Artist Stats! Get all the info on your favorite artists here.")
 print(" ")
+
+# additonal variables
+last_artist = "none"
+last_artist_num = 0
 
 # get the token
 token = get_token()
@@ -110,7 +127,8 @@ while True:
     print(" ")
 
     # display albums and amount if requested
-    print(artist_name, "has", get_number_albums(token, artist_id), "albums!")
+    num_albums = get_number_albums(token, artist_id)
+    print(artist_name, "has", num_albums, "albums!")
     album_question = input("Would you like to see albums by " + artist_name + "? (type yes or no) ")
     if album_question == "yes":
         albums = get_albums_by_artist(token, artist_id)
@@ -118,9 +136,14 @@ while True:
         print("Here are " + artist_name + "'s albums:")
         for idx, album in enumerate(albums):
             print(f"{idx + 1}. {album['name']}")
-        print(" ")
+
+    # print who has more albums
+    more_albums(artist_name, last_artist, num_albums, last_artist_num)
+    last_artist = artist_name
+    last_artist_num = num_albums
 
     # prompt for another artist
+    print(" ")
     continue_ans = input("Would you like to see stats for another artist? (type yes or no) ")
     if continue_ans == "no":
         break
