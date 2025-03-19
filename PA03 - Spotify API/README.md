@@ -7,6 +7,7 @@ The spotify.py program does the following:
 + Calls the API to search for an artist and shows the user their top ten songs.
 + Shows the user the number of the artist's albums and asks if they want to see a list. If so, it shows them.
 + Gives the user the option to search for another artist. 
++ Tells the user who has more albums.
 
 ## Identifying Information
 
